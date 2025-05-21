@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Checkout') {
         steps {
-          // Get   some code from a GitHub repository
+          // Get some code from a GitHub repository
           git branch: 'main', url: 'https://github.com/Soled73/lbg-vat-calculator.git'
         }
     }
@@ -15,8 +15,11 @@ pipeline {
         steps {
             withSonarQubeEnv('sonar-qube-1') {        
               sh "${scannerHome}/bin/sonar-scanner"
-            }   
+        }
+        timeout(time: 10, unit: 'MINUTES'){
+          waitForQualityGate abortPipeline: true
         }
     }
   }
+}
 }
